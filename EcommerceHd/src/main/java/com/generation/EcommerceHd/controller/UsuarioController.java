@@ -145,8 +145,9 @@ public class UsuarioController {
 	@PutMapping("/produto/compra/{id_Produto}/{id_Usuario}")
 	public ResponseEntity<?> novaCompra(
 			@PathVariable(value = "id_Produto") Long idProduto, 
-			@PathVariable(value = "id_Usuario") Long idUsuario){
-		Usuario compra = serviceLoja.comprarProduto(idUsuario, idProduto);
+			@PathVariable(value = "id_Usuario") Long idUsuario,
+			@RequestParam(defaultValue = "") int qtdCompras){
+		Usuario compra = serviceLoja.comprarProduto(idUsuario, idProduto, qtdCompras);
 		if (compra == null) {
 			return new ResponseEntity<String>("Produto ou Usuario invalido", HttpStatus.NO_CONTENT);
 		}
@@ -163,29 +164,4 @@ public class UsuarioController {
 		}
 		return new ResponseEntity<Usuario>(retorno, HttpStatus.ACCEPTED);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

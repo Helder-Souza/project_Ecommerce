@@ -39,6 +39,8 @@ public class Usuario {
 	@Size(max = 45)
 	private String senha;
 	
+	private float valorCompra;
+	
 	@OneToMany(mappedBy = "criadorLoja", cascade = CascadeType.ALL)
 	@JsonIgnoreProperties({"usuario", "criadorLoja", "produtos"})
 	private List<Loja> minhaLoja;
@@ -60,7 +62,7 @@ public class Usuario {
 			name = "compras",
 			joinColumns = @JoinColumn(name = "comprador_id"),
 			inverseJoinColumns = @JoinColumn(name = "produto_id"))
-	@JsonIgnoreProperties({"compradoPor", "criadoNaLoja"})
+	@JsonIgnoreProperties({"compradoPor", "criadoNaLoja", "qtdCompras"})
 	private List<Produto> minhasCompras = new ArrayList<>();
 
 	public Long getIdUsuario() {
@@ -93,6 +95,14 @@ public class Usuario {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public float getValorCompra() {
+		return valorCompra;
+	}
+
+	public void setValorCompra(float valorCompra) {
+		this.valorCompra = valorCompra;
 	}
 
 	public List<Loja> getMinhaLoja() {

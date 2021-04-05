@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.generation.EcommerceHd.model.Produto;
 import com.generation.EcommerceHd.repository.ProdutoRepository;
-//import com.generation.EcommerceHd.service.ProdutoService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -21,9 +20,6 @@ public class ProdutoController {
 
 	@Autowired
 	private ProdutoRepository repository;
-	
-/*	@Autowired
-	private ProdutoService service;*/
 	
 	@GetMapping
 	public ResponseEntity<List<Produto>> getAll(){
@@ -35,6 +31,11 @@ public class ProdutoController {
 		return repository.findById(idProduto)
 				.map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/tituloProduto/{tituloProduto}")
+	public ResponseEntity<List<Produto>> getByTituloProduto(@PathVariable String tituloProduto){
+		return ResponseEntity.ok(repository.findAllByTituloProdutoContainingIgnoreCase(tituloProduto));
 	}
 	
 	@GetMapping("/valorMenor/{valor}")

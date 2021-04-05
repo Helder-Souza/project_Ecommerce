@@ -39,6 +39,10 @@ public class Produto {
 	@Size(max = 200)
 	private String urlImagem;
 	
+	private int qtdEstoque;
+	
+	private int qtdCompras;
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonIgnoreProperties({"produtos", "criadorLoja", "usuariosInscritos"})
 	private Loja criadoNaLoja;
@@ -49,7 +53,7 @@ public class Produto {
 	private Usuario criadoPor;
 	
 	@ManyToMany(mappedBy = "minhasCompras", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonIgnoreProperties({"meusProdutos", "minhasCompras", "inscritoNaloja"})
+	@JsonIgnoreProperties({"meusProdutos","inscritoNaloja"})
 	private List<Usuario> compradoPor  = new ArrayList<>();
 
 	public Long getIdProduto() {
@@ -90,6 +94,22 @@ public class Produto {
 
 	public void setUrlImagem(String urlImagem) {
 		this.urlImagem = urlImagem;
+	}
+
+	public int getQtdEstoque() {
+		return qtdEstoque;
+	}
+
+	public void setQtdEstoque(int qtdEstoque) {
+		this.qtdEstoque = qtdEstoque;
+	}
+
+	public int getQtdCompras() {
+		return qtdCompras;
+	}
+
+	public void setQtdCompras(int qtdCompras) {
+		this.qtdCompras = qtdCompras;
 	}
 
 	public Loja getCriadoNaLoja() {
