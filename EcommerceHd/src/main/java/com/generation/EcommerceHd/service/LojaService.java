@@ -98,29 +98,12 @@ public class LojaService {
 	public Usuario comprarProduto(Long idUsuario, Long idProduto, int qtdCompras) {
 		Optional<Usuario> usuarioExistente = repositoryUsuario.findById(idUsuario);
 		Optional<Produto> produtoExistente = repositoryProduto.findById(idProduto);
-		 if(usuarioExistente.get().getIdUsuario() != produtoExistente.get().getCriadoPor().getIdUsuario()) {
-			produtoExistente.get().setQtdEstoque(produtoExistente.get().getQtdEstoque()-qtdCompras);
-			if(produtoExistente.get().getQtdEstoque() >= produtoExistente.get().getQtdCompras()) {
 				if(usuarioExistente.isPresent() && produtoExistente.isPresent()) {
 					usuarioExistente.get().getMinhasCompras().add(produtoExistente.get());
 					usuarioExistente.get().setValorCompra(produtoExistente.get().getValor()* qtdCompras);
-					this.estoque(idProduto);
 					return repositoryUsuario.save(usuarioExistente.get());
 				}
 				return null;
-			}else {
-				System.out.println("Estoque insuficiente");
-				}
-			return null;
-		}else {
-			System.out.println("O usuário criador não pode comprar seu próprio produto");
-		}
-		return null;
-	}
-	
-	public Produto estoque(Long idProduto) {
-		Optional<Produto> produtoExistente = repositoryProduto.findById(idProduto);
-		return repositoryProduto.save(produtoExistente.get());
 	}
 	
 	public Usuario deletarProduto ( Long idProduto, Long idUsuario) {

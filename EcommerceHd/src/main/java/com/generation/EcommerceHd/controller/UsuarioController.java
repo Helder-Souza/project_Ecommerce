@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.generation.EcommerceHd.model.Loja;
 import com.generation.EcommerceHd.model.Produto;
 import com.generation.EcommerceHd.model.Usuario;
+import com.generation.EcommerceHd.repository.ProdutoRepository;
 import com.generation.EcommerceHd.repository.UsuarioRepository;
 import com.generation.EcommerceHd.service.LojaService;
 import com.generation.EcommerceHd.service.UsuarioService;
@@ -39,6 +40,9 @@ public class UsuarioController {
 	
 	@Autowired
 	private UsuarioRepository repository;
+	
+	@Autowired
+	private ProdutoRepository repositoryProduto;
 	
 	@GetMapping
 	public ResponseEntity<List<Usuario>> getAll(){
@@ -147,13 +151,24 @@ public class UsuarioController {
 			@PathVariable(value = "id_Produto") Long idProduto, 
 			@PathVariable(value = "id_Usuario") Long idUsuario,
 			@RequestParam(defaultValue = "") int qtdCompras){
-		Usuario compra = serviceLoja.comprarProduto(idUsuario, idProduto, qtdCompras);
-		if (compra == null) {
-			return new ResponseEntity<String>("Produto ou Usuario invalido", HttpStatus.NO_CONTENT);
+		Optional<Usuario> usuarioExistente = repository.findById(idUsuario);
+		Optional<Produto> produtoExistente = repositoryProduto.findById(idProduto);
+		if(usuarioExistente.get().getIdUsuario() == produtoExistente.get().getCriadoPor().getIdUsuario()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O usuário criador não pode comprar seu próprio produto");
+		} else {
+			produtoExistente.get().setQtdEstoque(produtoExistente.get().getQtdEstoque()-qtdCompras);
+			if(produtoExistente.get().getQtdEstoque() >= produtoExistente.get().getQtdCompras()) {
+				Usuario compra = serviceLoja.comprarProduto(idUsuario, idProduto, qtdCompras);
+				if (compra == null) {
+					return new ResponseEntity<String>("Produto ou Usuario invalido", HttpStatus.NO_CONTENT);
+				}
+				return new ResponseEntity<Usuario>(compra, HttpStatus.CREATED);		
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Estoque insuficiente");
+			}
 		}
-		return new ResponseEntity<Usuario>(compra, HttpStatus.CREATED);
 	}
-	
+		
 	@DeleteMapping("/produto/delete/{id_Produto}/{id_Usuario}")
 	public ResponseEntity<?> removerProduto(
 			@PathVariable(value = "id_Produto")Long idProduto, 

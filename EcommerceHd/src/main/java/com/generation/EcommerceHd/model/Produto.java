@@ -53,7 +53,7 @@ public class Produto {
 	private Usuario criadoPor;
 	
 	@ManyToMany(mappedBy = "minhasCompras", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonIgnoreProperties({"meusProdutos","inscritoNaloja"})
+	@JsonIgnoreProperties({"meusProdutos","inscritoNaloja", "minhaLoja", "minhasCompras"})
 	private List<Usuario> compradoPor  = new ArrayList<>();
 
 	public Long getIdProduto() {
